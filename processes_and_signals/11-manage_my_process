@@ -1,5 +1,4 @@
-#!/bin/bash
-
+#!/usr/bin/env bash
 # Init script to manage manage_my_process.sh
 
 # Path to the process script and PID file
