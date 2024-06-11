@@ -23,7 +23,7 @@ stop() {
         return
     fi
     echo "Stopping manage_my_process"
-    kill -SIGTERM $(cat "$PIDFILE")
+    kill -SIGTERM "$(cat "$PIDFILE")"
     rm -f "$PIDFILE"
     echo "manage_my_process stopped"
 }
