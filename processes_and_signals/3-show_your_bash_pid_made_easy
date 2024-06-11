@@ -1,3 +1,17 @@
 #!/usr/bin/env bash
-# displays the bash process id
-pgrep -l -i "bash"
+# Get the list of PIDs for processes containing "bash" in their name
+pids=$(pgrep -f bash)
+
+# Check if pgrep found any processes
+if [ -z "$pids" ]; then
+    echo "No bash processes found"
+    exit 0
+fi
+
+# Loop through each PID and display its name
+for pid in $pids; do
+    if [ -e "/proc/$pid/comm" ]; then
+        process_name=$(cat /proc/$pid/comm)
+        echo "PID: $pid, Process Name: $process_name"
+    fi
+done
