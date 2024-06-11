@@ -1,47 +1,43 @@
 #!/usr/bin/env bash
 # Init script to manage manage_my_process.sh
+pid_file="/var/run/my_process.pid"
+process_name="manage_my_process"
 
-# Path to the process script and PID file
-PROCESS_SCRIPT="/path/to/manage_my_process.sh"
-PIDFILE="/var/run/my_process.pid"
-
-start() {
-    if [ -f "$PIDFILE" ]; then
-        echo "manage_my_process is already running"
-        return
+start_process() {
+    if [ -f "$pid_file" ]; then
+        echo "$process_name is already running."
+    else
+        ./$process_name &
+        echo "$!" > "$pid_file"
+        echo "$process_name started."
     fi
-    echo "Starting manage_my_process"
-    nohup bash "$PROCESS_SCRIPT" &
-    echo $! > "$PIDFILE"
-    echo "manage_my_process started"
 }
 
-stop() {
-    if [ ! -f "$PIDFILE" ]; then
-        echo "manage_my_process is not running"
-        return
+stop_process() {
+    if [ -f "$pid_file" ]; then
+        echo "Stopping $process_name..."
+        kill "$(cat "$pid_file")"
+        rm "$pid_file"
+        echo "$process_name stopped."
+    else
+        echo "$process_name is not running."
     fi
-    echo "Stopping manage_my_process"
-    kill -SIGTERM "$(cat "$PIDFILE")"
-    rm -f "$PIDFILE"
-    echo "manage_my_process stopped"
 }
 
-restart() {
-    stop
-    start
-    echo "manage_my_process restarted"
+restart_process() {
+    stop_process
+    start_process
 }
 
 case "$1" in
     start)
-        start
+        start_process
         ;;
     stop)
-        stop
+        stop_process
         ;;
     restart)
-        restart
+        restart_process
         ;;
     *)
         echo "Usage: $0 {start|stop|restart}"
