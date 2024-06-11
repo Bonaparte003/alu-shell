@@ -1,4 +1,3 @@
 #!/usr/bin/env bash
-# displays the bash ids
-# usage of pgrep
+# displays the bash process id
 pgrep -l bash
